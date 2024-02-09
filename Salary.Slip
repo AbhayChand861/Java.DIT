@@ -1,0 +1,83 @@
+import java.util.Locale;
+import java.util.Scanner;
+
+public class SalarySlip {
+
+    static void takeInput() {
+        Scanner scanner = new Scanner(System.in);
+        Locale locale;
+        System.out.println("Please enter your prefferd language");
+        System.out.println("1 for English");
+        System.out.println("2 for Hindi");
+        int choice = scanner.nextInt();
+        if (choice == 1) {
+            locale = new Locale("en", "IN");
+        } else if (choice == 2) {
+            locale = new Locale("hi", "IN");
+        } else {
+            System.out.println("Invalid Choice... by default using English");
+        }
+        System.out.println("Please enter your employee ID");
+        int empID = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println("Please enter your Name");
+        String empName = scanner.nextLine();
+        System.out.println("Please enter your Basic Salary");
+        double basicSalary = scanner.nextDouble();
+        calculate(basicSalary, empID, empName);
+    }
+
+    static String properName(String name) {
+        String[] nameArray = name.split(" ");
+        String fullName = "";
+        for (int i = 0; i < nameArray.length; i++) {
+
+            String firstLetter = String.valueOf(nameArray[i].charAt(0)).toUpperCase();
+            String remString = nameArray[i].substring(1).toLowerCase();
+            fullName = fullName + " " + firstLetter + remString;
+        }
+        return fullName;
+    }
+
+    static void calculate(double basicSalary, int empID, String name) {
+        double HRA = basicSalary * 0.40;
+        double TA = basicSalary * 0.25;
+        double DA = basicSalary * 0.20;
+        double MA = basicSalary * 0.30;
+        double PF = basicSalary * 0.10;
+        double TAX = calcTax(basicSalary);
+        String prName = properName(name);
+        double gs = basicSalary + HRA + DA + TA + MA;
+        double ns = gs - (TAX / 12);
+        printData(empID, prName, HRA, TA, DA, MA, TAX, PF, gs, ns);
+    }
+
+    static double calcTax(double basicSalary) {
+        double totSal = basicSalary * 12;
+        if (totSal < 500000) {
+            return 0.0 * totSal;
+        } else if (totSal > 500000 && totSal < 700000) {
+            return 0.10 * totSal;
+        } else if (totSal > 700000 && totSal < 1000000) {
+            return 0.15 * totSal;
+        }
+        return 0.2 * totSal;
+    }
+
+    static void printData(int empID, String name, double HRA, double TA, double DA, double MA, double TAX, double PF,
+            double gs, double ns) {
+        System.out.println("Welcome, " + name);
+        System.out.println("This is your emp ID :" + empID);
+        System.out.println("Earnings \t\tDeductions");
+        System.out.println("HRA :" + HRA + "\t \t TAX :" + TAX);
+        System.out.println("TA :" + TA + " \t \t PF :" + PF);
+        System.out.println("DA :" + DA);
+        System.out.println("MA :" + MA);
+        System.out.println("This is your Gross Salary :" + gs);
+        System.out.println("This is your Net Salary :" + ns);
+    }
+
+    public static void main(String[] args) {
+        takeInput();
+    }
+}
